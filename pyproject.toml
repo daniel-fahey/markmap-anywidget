@@ -1,6 +1,6 @@
 [project]
 name = "markmap_anywidget"
-version = "0.1.0"
+version = "0.1.1"
 description = "anywidget to make interactive mindmaps from markdown using markmap in interactive computing environments"
 readme = "README.md"
 authors = [
