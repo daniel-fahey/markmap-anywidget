@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [0.1.2] - 2025-09-04
 
-- Initial release of `markmap-anywidget`
-- Core functionality: display interactive mindmaps from Markdown.
-- Support for YAML frontmatter to configure markmap options.
-- Bundled all JavaScript assets for full offline capability.
+### Fixed
+
+- Fixed CI/CD workflow to build JavaScript bundle before packaging Python distribution
+- Added `[tool.uv.build-backend]` configuration to include static files in package
+
+### Changed
+
+- Updated `make build` to build both JavaScript bundle and Python package
+- Simplified GitHub Actions workflow to use `make` targets consistently
 
 ## [0.1.1] - 2025-09-04
 

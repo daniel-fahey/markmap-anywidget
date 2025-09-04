@@ -3,10 +3,12 @@
 # Complete build process
 all: clean build test
 
-# Build JavaScript bundle
+# Build JavaScript bundle and Python package
 build:
 	cd js && pnpm install && pnpm build
 	@echo "✅ JavaScript bundle built"
+	uv build
+	@echo "✅ Python package built"
 
 # CI-specific build (assumes Nix environment)
 ci: build check

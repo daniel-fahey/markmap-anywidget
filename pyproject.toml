@@ -1,6 +1,6 @@
 [project]
 name = "markmap_anywidget"
-version = "0.1.1"
+version = "0.1.2"
 description = "anywidget to make interactive mindmaps from markdown using markmap in interactive computing environments"
 readme = "README.md"
 authors = [
@@ -38,6 +38,10 @@ markmap_anywidget = "markmap_anywidget:main"
 [build-system]
 requires = ["uv_build>=0.8.6,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+source-include = ["src/markmap_anywidget/static/**"]
+
 
 [dependency-groups]
 dev = [
