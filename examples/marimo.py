@@ -1,6 +1,13 @@
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "markmap-anywidget==0.1.3",
+# ]
+# ///
+
 import marimo
 
-__generated_with = "0.15.1"
+__generated_with = "0.15.2"
 app = marimo.App(width="full")
 
 
@@ -76,11 +83,6 @@ def _(MarkmapWidget, mo, text_area):
 @app.cell(hide_code=True)
 def _(mo, text_area, widget):
     mo.hstack(items=[text_area, widget], widths="equal")
-    return
-
-
-@app.cell
-def _():
     return
 
 
