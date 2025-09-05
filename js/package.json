@@ -1,6 +1,6 @@
 {
   "name": "markmap-anywidget-js",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "JavaScript bundle for markmap-anywidget",
   "main": "dist/widget.js",
   "scripts": {

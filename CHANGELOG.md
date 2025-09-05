@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated dependencies and streamlined dev environment
+- Refactored Nix flake configuration
+
 ## [0.1.3] - 2025-09-04
 
 ### Changed
