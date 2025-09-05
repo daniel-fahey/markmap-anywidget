@@ -26,13 +26,22 @@ help: ## Show this help message
 # Determine version: use git tag if on a tagged commit, otherwise use dev version
 # Can be overridden by user: make build VERSION=1.2.3
 
+# Convert git short hash to numeric value for dev version
+# This avoids local versions (+hash) which PyPI rejects
+# PEP 440 requires dev numbers to be numeric, not alphanumeric
+#
+# To reverse and get the short hash back from the dev number:
+# Method 1: echo 107297581 | xargs printf '%x\n'
+# Method 2: echo 107297581 | python3 -c 'import sys; print(hex(int(sys.stdin.read().strip()))[2:])'
+# Method 3: echo 107297581 | awk '{printf "%x\n", $$0}'
 VERSION ?= $(shell \
 	if git describe --tags --exact-match HEAD >/dev/null 2>&1; then \
 		git describe --tags --exact-match HEAD; \
 	else \
 		BASE_VERSION=$$(grep '^version = ' pyproject.toml | sd 'version = "([^"]+)"' '$$1'); \
-		COMMIT_HASH=$$(git rev-parse --short HEAD); \
-		echo "$${BASE_VERSION}.dev1+g$${COMMIT_HASH}"; \
+		SHORT_HASH=$$(git rev-parse --short HEAD); \
+		NUMERIC_DEV_NUMBER=$$(echo "$${SHORT_HASH}" | awk '{print strtonum("0x" $$0)}'); \
+		echo "$${BASE_VERSION}.dev$${NUMERIC_DEV_NUMBER}"; \
 	fi \
 )
 
