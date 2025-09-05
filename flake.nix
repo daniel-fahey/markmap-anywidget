@@ -34,6 +34,8 @@
             pnpm
             git
             gh
+            sd
+            gawk
           ];
           shellHook = ''
             export UV_PYTHON="${python}/bin/python"
@@ -64,14 +66,6 @@
         pythonDevShells // {
           default = pythonDevShells."py${latestPythonVersion}";
         }
-      );
-
-      # Generate checks for each devShell
-      checks = forAllSystems (pkgs:
-        builtins.listToAttrs (map (v: {
-          name = "devShell-py${v}";
-          value = mkPythonDevShell pkgs v;
-        }) supportedPythonVersions)
       );
     };
 }

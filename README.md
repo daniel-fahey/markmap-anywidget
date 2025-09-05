@@ -67,7 +67,7 @@ uv sync
 **Complete build (recommended):**
 ```bash
 # Using make (includes clean, build, and quality checks)
-make
+make all
 ```
 
 **Build only (faster for development):**
@@ -112,6 +112,15 @@ uv run mypy src/
 make test
 # or:
 uv run pytest
+```
+
+### Available Commands
+
+**Show all available Makefile targets:**
+```bash
+make
+# or:
+make help
 ```
 
 ### Examples
