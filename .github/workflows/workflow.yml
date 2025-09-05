@@ -37,7 +37,7 @@ jobs:
         run: nix flake check
       
       - name: Run CI checks for Python ${{ matrix.python-version }}
-        run: nix develop .#py${{ matrix.python-version }} --command bash -c "make ci"
+        run: nix develop .#py${{ matrix.python-version }} --command bash -c "make all"
 
   publish:
     name: Build and publish Python distribution

@@ -1,7 +1,7 @@
 .PHONY: build clean test check dev all ci
 
 # Complete build process
-all: clean build test
+all: clean build check
 
 # Build JavaScript bundle and Python package
 build:

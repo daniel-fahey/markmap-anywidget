@@ -22,8 +22,7 @@ from markmap_anywidget import MarkmapWidget
 
 widget = mo.ui.anywidget(
     MarkmapWidget(
-        markdown_content="""
----
+        markdown_content="""---
 markmap:
   colorFreezeLevel: 2
   maxWidth: 300
@@ -61,16 +60,61 @@ direnv allow
 
 # Install dependencies
 uv sync
-
-# Build JavaScript assets (see Makefile for more targets)
-make build
 ```
 
-To watch for changes and automatically rebuild:
+### Building
 
+**Complete build (recommended):**
 ```bash
-make dev
+# Using make (includes clean, build, and quality checks)
+make
 ```
+
+**Build only (faster for development):**
+```bash
+# Using make
+make build
+# or:
+cd js && pnpm install && pnpm build
+cd .. && uv build
+```
+
+**Development mode (watch for changes):**
+```bash
+# Using make
+make dev
+
+# Manual equivalent
+cd js && pnpm dev
+```
+
+### Quality Checks
+
+**Run all quality checks:**
+```bash
+# Using make (includes lint, type-check, and test)
+make check
+```
+
+**Individual checks:**
+```bash
+# Linting
+make lint
+# or:
+uv run ruff check src/ examples/ tests/
+
+# Type checking
+make type-check
+# or:
+uv run mypy src/
+
+# Testing
+make test
+# or:
+uv run pytest
+```
+
+### Examples
 
 Run the marimo example:
 
