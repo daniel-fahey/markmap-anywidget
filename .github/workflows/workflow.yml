@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["312", "313"]
-        os: ["ubuntu-latest", "ubuntu-24.04-arm", "macos-14"]
+        python-version: ["310", "311", "312", "313"]
+        os: ["ubuntu-latest"] # (for now), others:, "ubuntu-24.04-arm", "macos-14"]
     runs-on: ${{ matrix.os }}
     
     steps:

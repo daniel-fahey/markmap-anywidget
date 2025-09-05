@@ -17,7 +17,7 @@
         ] (system: function nixpkgs.legacyPackages.${system});
 
       # Shared configuration
-      supportedPythonVersions = [ "312" "313" ];
+      supportedPythonVersions = [ "310" "311" "312" "313" ];
       latestPythonVersion = "313";
 
       # Function to create a dev shell for a specific Python version
