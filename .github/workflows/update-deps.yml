@@ -1,0 +1,33 @@
+name: Update deps
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'  # weekly on Sunday
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - uses: cachix/install-nix-action@v25
+      
+      - name: Update all deps
+        run: |
+          nix flake update
+          nix develop --command bun update
+          nix develop --command bun run build
+      
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update dependencies"
+          file_pattern: |
+            flake.lock
+            bun.lock
+            src/markmap_anywidget/static/

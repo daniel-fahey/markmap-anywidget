@@ -1,0 +1,16 @@
+{
+  "name": "markmap-anywidget",
+  "type": "module",
+  "scripts": {
+    "build": "bun build widget.ts --outfile=src/markmap_anywidget/static/widget.js --minify --sourcemap --target=browser",
+    "dev": "bun build widget.ts --outfile=src/markmap_anywidget/static/widget.js --watch --target=browser",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "markmap-lib": "^0.18.12",
+    "markmap-view": "^0.18.12"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

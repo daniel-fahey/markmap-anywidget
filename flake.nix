@@ -2,70 +2,46 @@
   description = "markmap-anywidget: interactive mindmaps from Markdown";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs }:
-    let
-      # Function to apply a function to all supported systems
-      forAllSystems = function:
-        nixpkgs.lib.genAttrs [
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { lib, ... }:
+      {
+        systems = [
           "x86_64-linux"
           "aarch64-linux"
           "x86_64-darwin"
           "aarch64-darwin"
-        ] (system: function nixpkgs.legacyPackages.${system});
+        ];
 
-      # Shared configuration
-      supportedPythonVersions = [ "310" "311" "312" "313" ];
-      latestPythonVersion = "313";
+        perSystem =
+          { config, pkgs, ... }:
+          {
+            packages.default = pkgs.callPackage ./default.nix { };
 
-      # Function to create a dev shell for a specific Python version
-      mkPythonDevShell = pkgs: pyVersion:
-        let
-          python = pkgs."python${pyVersion}";
-        in
-        pkgs.mkShell {
-          name = "markmap-anywidget-py${pyVersion}";
-          buildInputs = with pkgs; [
-            python
-            uv
-            nodejs-slim
-            pnpm
-            git
-            gh
-            sd
-            gawk
-          ];
-          shellHook = ''
-            export UV_PYTHON="${python}/bin/python"
-            export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH"
-            echo "🚀 markmap-anywidget development environment (Python ${pyVersion})"
-            echo "Python: $(${python}/bin/python --version)"
-            echo "Node.js: $(node --version)"
-            echo "uv: $(uv --version)"
-            echo "pnpm: $(pnpm --version)"
-            echo ""
-            echo "Ready to build markmap-anywidget!"
-          '';
-        };
+            devShells.default = pkgs.mkShell {
+              packages = [
+                pkgs.bun
+                (pkgs.python3.withPackages (ps: [
+                  ps.anywidget
+                  ps.marimo
+                  ps.pytest
+                  ps.build
+                ]))
+              ];
 
-      # Function to generate Python shells for a given package set
-      mkPythonShells = pkgs:
-        builtins.listToAttrs (map (v: {
-          name = "py${v}";
-          value = mkPythonDevShell pkgs v;
-        }) supportedPythonVersions);
+              shellHook = ''
+                export PYTHONPATH="${toString ./src}:$PYTHONPATH"
+              '';
+            };
 
-    in {
-      # Development shells
-      devShells = forAllSystems (pkgs:
-        let
-          pythonDevShells = mkPythonShells pkgs;
-        in
-        pythonDevShells // {
-          default = pythonDevShells."py${latestPythonVersion}";
-        }
-      );
-    };
+            checks.default = config.packages.default;
+          };
+      }
+    );
 }

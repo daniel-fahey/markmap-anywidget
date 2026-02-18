@@ -1,14 +1,14 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "markmap-anywidget==0.1.3",
+#     "markmap-anywidget==0.1.4",
 # ]
 # ///
 
 import marimo
 
 __generated_with = "0.15.2"
-app = marimo.App(width="full")
+app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)

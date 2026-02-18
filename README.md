@@ -4,17 +4,39 @@ A simple [anywidget](https://github.com/manzt/anywidget) implementation of [mark
 
 ## Installation
 
+**PyPI:**
 ```bash
-# Using pip
 pip install markmap-anywidget
-
-# Using uv
-uv add markmap-anywidget
 ```
 
-## Usage with marimo
+**Nix:**
+```nix
+# your flake.nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    markmap-anywidget.url = "github:daniel-fahey/markmap-anywidget";
+  };
 
-See the [`marimo` documentation](https://docs.marimo.io/api/inputs/anywidget/) for more information on using `anywidget`.
+  outputs = { nixpkgs, markmap-anywidget, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [
+          (pkgs.python3.withPackages (ps: [
+            markmap-anywidget.packages.${system}.default
+          ]))
+        ];
+      };
+    };
+}
+```
+
+## Usage
+
+See the [`marimo` documentation](https://docs.marimo.io/api/inputs/anywidget/) for more information.
 
 ```python
 import marimo as mo
@@ -42,91 +64,31 @@ markmap:
     )
 )
 
-# In a marimo cell, displaying the widget is enough
 widget
 ```
 
 ## Development
 
-This project uses [Nix](https://nixos.org/) with [nix-direnv](https://github.com/nix-community/nix-direnv) for a reproducible development environment.
-
 ```bash
-# Clone the repository
 git clone git@github.com:daniel-fahey/markmap-anywidget.git
 cd markmap-anywidget
 
-# Enter Nix development environment
-direnv allow
-
-# Install dependencies
-uv sync
+nix develop -c bun run build                  # rebuild static assets
+nix develop -c marimo run examples/marimo.py  # test widget
 ```
 
-### Building
+Tests run automatically in the Nix build.
 
-**Complete build (recommended):**
-```bash
-# Using make (includes clean, build, and quality checks)
-make all
-```
-
-**Build only (faster for development):**
-```bash
-# Using make
-make build
-# or:
-cd js && pnpm install && pnpm build
-cd .. && uv build
-```
-
-**Development mode (watch for changes):**
-```bash
-# Using make
-make dev
-
-# Manual equivalent
-cd js && pnpm dev
-```
-
-### Quality Checks
-
-**Run all quality checks:**
-```bash
-# Using make (includes lint, type-check, and test)
-make check
-```
-
-**Individual checks:**
-```bash
-# Linting
-make lint
-# or:
-uv run ruff check src/ examples/ tests/
-
-# Type checking
-make type-check
-# or:
-uv run mypy src/
-
-# Testing
-make test
-# or:
-uv run pytest
-```
-
-### Available Commands
-
-**Show all available Makefile targets:**
-```bash
-make
-# or:
-make help
-```
-
-### Examples
-
-Run the marimo example:
+## Releasing
 
 ```bash
-uv run python -m marimo edit --watch examples/marimo.py
+# Update version
+echo "0.3.0" > VERSION
+nix develop -c bun run build
+
+# Commit and tag
+git add -A && git commit -m "v0.3.0"
+git tag v0.3.0 && git push --tags
+
+# Create release on GitHub (publishes to PyPI automatically)
 ```
