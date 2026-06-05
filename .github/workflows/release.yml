@@ -7,16 +7,16 @@ jobs:
     name: Build distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v25
-      - uses: cachix/cachix-action@v14
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v27
+      - uses: cachix/cachix-action@v17
         with:
           name: daniel-fahey
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - id: dist
         run: echo "path=$(nix build .#default^dist --print-out-paths --no-link)" >> "$GITHUB_OUTPUT"
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
           path: ${{ steps.dist.outputs.path }}/
@@ -34,7 +34,7 @@ jobs:
       id-token: write
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: python-package-distributions
           path: dist/
@@ -53,7 +53,7 @@ jobs:
       id-token: write
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: python-package-distributions
           path: dist/
