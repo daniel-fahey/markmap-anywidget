@@ -1,26 +1,15 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "markmap_anywidget"
-dynamic = ["version"]
+version = "0.3.0"
 description = "Interactive mindmaps from markdown using markmap"
-readme = "README.md"
-authors = [{ name = "Daniel Fahey", email = "daniel.fahey@proton.me" }]
-license = "MIT"
 requires-python = ">=3.10"
-dependencies = ["anywidget>=0.9.18"]
+license = "MIT"
+dependencies = ["anywidget"]
 
-[project.urls]
-Homepage = "https://github.com/daniel-fahey/markmap-anywidget"
-
-[tool.setuptools]
-packages = ["markmap_anywidget"]
-package-dir = {"" = "src"}
-
-[tool.setuptools.package-data]
-markmap_anywidget = ["static/*"]
-
-[tool.setuptools.dynamic]
-version = {file = "VERSION"}
+[tool.hatch.build]
+only-packages = true
+artifacts = ["src/markmap_anywidget/static/*"]

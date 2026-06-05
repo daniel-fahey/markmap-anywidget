@@ -1,5 +1,5 @@
 {
-  description = "markmap-anywidget: interactive mindmaps from Markdown";
+  description = "markmap-anywidget: interactive mindmaps from markdown";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -24,23 +24,16 @@
           {
             packages.default = pkgs.callPackage ./default.nix { };
 
+            checks.default = config.packages.default;
+
             devShells.default = pkgs.mkShell {
-              packages = [
-                pkgs.bun
-                (pkgs.python3.withPackages (ps: [
-                  ps.anywidget
-                  ps.marimo
-                  ps.pytest
-                  ps.build
+              packages = with pkgs; [
+                (python3.withPackages (ps: with ps; [
+                  config.packages.default
+                  marimo
                 ]))
               ];
-
-              shellHook = ''
-                export PYTHONPATH="${toString ./src}:$PYTHONPATH"
-              '';
             };
-
-            checks.default = config.packages.default;
           };
       }
     );

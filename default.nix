@@ -1,25 +1,43 @@
 {
-  pkgs ? import <nixpkgs> { },
+  lib,
+  python3Packages,
+  esbuild,
+  fetchNpmDeps,
+  nodejs_latest,
+  npmHooks,
 }:
 
-pkgs.python3Packages.buildPythonPackage {
-  pname = "markmap-anywidget";
-  version = builtins.readFile ./VERSION;
-  src = pkgs.lib.fileset.toSource {
-    root = ./.;
-    fileset = pkgs.lib.fileset.unions [
-      ./pyproject.toml
-      ./VERSION
-      ./README.md
-      ./src
-      ./tests
-    ];
-  };
+let
+  pyproject = lib.importTOML ./pyproject.toml;
+  src = ./.;
+in
+
+python3Packages.buildPythonPackage (finalAttrs: {
+  inherit src;
+  pname = pyproject.project.name;
+  version = pyproject.project.version;
 
   pyproject = true;
-  build-system = [ pkgs.python3Packages.setuptools ];
-  dependencies = [ pkgs.python3Packages.anywidget ];
-  nativeCheckInputs = [ pkgs.python3Packages.pytest ];
 
-  checkPhase = "pytest";
-}
+  build-system = with python3Packages; [ hatchling ];
+
+  nativeBuildInputs = [
+    esbuild
+    nodejs_latest
+    npmHooks.npmConfigHook
+  ];
+
+  npmDeps = fetchNpmDeps {
+    inherit (finalAttrs) src;
+    hash = "sha256-KpBDqntdfYfwo83a0UUJw7c24Z8GLmKhmOmgiY+cEOc=";
+  };
+
+  preBuild = ''
+    npm ci --offline
+    esbuild widget.ts --minify --format=esm --bundle --outdir=src/markmap_anywidget/static
+  '';
+
+  dependencies = with python3Packages; [ anywidget ];
+
+  nativeCheckInputs = with python3Packages; [ pytestCheckHook ];
+})

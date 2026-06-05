@@ -73,22 +73,14 @@ widget
 git clone git@github.com:daniel-fahey/markmap-anywidget.git
 cd markmap-anywidget
 
-nix develop -c bun run build                  # rebuild static assets
-nix develop -c marimo run examples/marimo.py  # test widget
+nix develop -c marimo run examples/marimo.py
 ```
 
-Tests run automatically in the Nix build.
+Tests run automatically in the Nix build (`nix build` or `nix flake check`).
 
 ## Releasing
 
-```bash
-# Update version
-echo "0.3.0" > VERSION
-nix develop -c bun run build
-
-# Commit and tag
-git add -A && git commit -m "v0.3.0"
-git tag v0.3.0 && git push --tags
-
-# Create release on GitHub (publishes to PyPI automatically)
-```
+1. Update `version` in `pyproject.toml`
+2. Update the npm dependency hash in `default.nix` if needed
+3. Commit, tag, and push: `git add -A && git commit -m "v0.3.0" && git tag v0.3.0 && git push --tags`
+4. Create a release on GitHub (publishes to PyPI automatically)
